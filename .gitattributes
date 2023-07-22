@@ -1,1 +1,5 @@
-/assets/handle.svg      export-ignore
+/addons/handle.svg      export-ignore
+/docs/*                 export-ignore
+.gitattributes          export-ignore
+LICENSE.txt             export-ignore
+README.md               export-ignore
