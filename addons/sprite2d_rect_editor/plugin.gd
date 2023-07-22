@@ -25,6 +25,7 @@ var drag_state := DragState.none
 var starting_mouse_pos_in_scene: Vector2
 var starting_current_object_global_rect: Rect2
 var starting_current_object_region_rect: Rect2
+var starting_current_object_global_pos: Vector2
 var undo_redo: EditorUndoRedoManager
 
 
@@ -89,17 +90,12 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 
 		var mouse_event := event as InputEventMouseMotion
 
-		var initial_rect := starting_current_object_region_rect
-		var final_rect: Rect2
-		var initial_global_pos := current_object.global_position
-		var final_global_pos: Vector2
-
 		match drag_state:
 			DragState.right:
 				var mouse_pos_in_scene := get_editor_transform().affine_inverse() * mouse_event.position
 				var distance := mouse_pos_in_scene.x - starting_mouse_pos_in_scene.x
 
-				final_rect = Rect2(
+				current_object.region_rect = Rect2(
 					starting_current_object_region_rect.position,
 					Vector2(
 						snappedf(
@@ -110,7 +106,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 					)
 				)
 
-				final_global_pos = Vector2(
+				current_object.global_position = Vector2(
 					snappedf(
 						(starting_current_object_global_rect.position.x + starting_current_object_global_rect.size.x / 2) + distance / 2.0,
 						grid_size / 2.0
@@ -122,7 +118,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 				var mouse_pos_in_scene := get_editor_transform().affine_inverse() * mouse_event.position
 				var distance := mouse_pos_in_scene.y - starting_mouse_pos_in_scene.y
 
-				final_rect = Rect2(
+				current_object.region_rect = Rect2(
 					starting_current_object_region_rect.position,
 					Vector2(
 						starting_current_object_region_rect.size.x,
@@ -133,7 +129,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 					)
 				)
 
-				final_global_pos = Vector2(
+				current_object.global_position = Vector2(
 					current_object.global_position.x,
 					snappedf(
 						(starting_current_object_global_rect.position.y + starting_current_object_global_rect.size.y / 2) + distance / 2.0,
@@ -145,7 +141,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 				var mouse_pos_in_scene := get_editor_transform().affine_inverse() * mouse_event.position
 				var distance := mouse_pos_in_scene.x - starting_mouse_pos_in_scene.x
 
-				final_rect = Rect2(
+				current_object.region_rect = Rect2(
 					Vector2(
 						snappedf(
 							(starting_current_object_region_rect.position.x) + (distance / current_object.global_scale.x),
@@ -162,7 +158,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 					),
 				)
 
-				final_global_pos = Vector2(
+				current_object.global_position = Vector2(
 					snappedf(
 						(starting_current_object_global_rect.position.x + starting_current_object_global_rect.size.x / 2) + distance / 2.0,
 						grid_size / 2.0,
@@ -174,7 +170,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 				var mouse_pos_in_scene := get_editor_transform().affine_inverse() * mouse_event.position
 				var distance := mouse_pos_in_scene.y - starting_mouse_pos_in_scene.y
 
-				final_rect = Rect2(
+				current_object.region_rect = Rect2(
 					Vector2(
 						starting_current_object_region_rect.position.x,
 						snappedf(
@@ -191,7 +187,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 					),
 				)
 
-				final_global_pos = Vector2(
+				current_object.global_position = Vector2(
 					current_object.global_position.x,
 					snappedf(
 						(starting_current_object_global_rect.position.y + starting_current_object_global_rect.size.y / 2) + distance / 2.0,
@@ -210,19 +206,6 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 				return false
 
 
-		if (
-			final_rect != starting_current_object_region_rect and
-			final_global_pos != current_object.global_position and
-			not undo_redo.is_committing_action()
-		):
-			# Without MERGE_ENDS it acts weird when undoing
-			undo_redo.create_action("Sprite2D Rect Editor: resize rect in editor", UndoRedo.MERGE_ENDS)
-			undo_redo.add_do_property(current_object, "region_rect", final_rect)
-			undo_redo.add_undo_property(current_object, "region_rect", initial_rect)
-			undo_redo.add_do_property(current_object, "global_position", final_global_pos)
-			undo_redo.add_undo_property(current_object, "global_position", initial_global_pos)
-			undo_redo.commit_action()
-
 		# Redraw viewport when cursor is moved.
 		update_overlays()
 		return true
@@ -232,6 +215,14 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 		if mouse_event.button_index == MOUSE_BUTTON_LEFT:
 			if not mouse_event.pressed and drag_state != DragState.none:
 				drag_state = DragState.none
+
+				undo_redo.create_action("Sprite2D Rect Editor: resize rect in editor")
+				undo_redo.add_do_property(current_object, "region_rect", current_object.region_rect)
+				undo_redo.add_undo_property(current_object, "region_rect", starting_current_object_region_rect)
+				undo_redo.add_do_property(current_object, "global_position", current_object.global_position)
+				undo_redo.add_undo_property(current_object, "global_position", starting_current_object_global_pos)
+				undo_redo.commit_action(false)
+
 				return true
 
 			elif mouse_event.pressed:
@@ -240,6 +231,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 					starting_mouse_pos_in_scene = get_editor_transform().affine_inverse() * mouse_event.position
 					starting_current_object_global_rect = get_current_object_global_rect()
 					starting_current_object_region_rect = current_object.region_rect
+					starting_current_object_global_pos = current_object.global_position
 					return true
 
 				elif get_handle_editor_rect("bottom").has_point(mouse_event.position):
@@ -247,6 +239,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 					starting_mouse_pos_in_scene = get_editor_transform().affine_inverse() * mouse_event.position
 					starting_current_object_global_rect = get_current_object_global_rect()
 					starting_current_object_region_rect = current_object.region_rect
+					starting_current_object_global_pos = current_object.global_position
 					return true
 
 				if get_handle_editor_rect("left").has_point(mouse_event.position):
@@ -254,6 +247,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 					starting_mouse_pos_in_scene = get_editor_transform().affine_inverse() * mouse_event.position
 					starting_current_object_global_rect = get_current_object_global_rect()
 					starting_current_object_region_rect = current_object.region_rect
+					starting_current_object_global_pos = current_object.global_position
 					return true
 
 				elif get_handle_editor_rect("top").has_point(mouse_event.position):
@@ -261,6 +255,7 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 					starting_mouse_pos_in_scene = get_editor_transform().affine_inverse() * mouse_event.position
 					starting_current_object_global_rect = get_current_object_global_rect()
 					starting_current_object_region_rect = current_object.region_rect
+					starting_current_object_global_pos = current_object.global_position
 					return true
 
 	return false
