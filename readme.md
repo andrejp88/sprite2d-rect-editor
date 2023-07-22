@@ -5,8 +5,8 @@ nodes. The addon was made for Godot 4.1.1. It may work for 4.0 releases but I
 haven't tested them.
 
 
-## Demo:
-[![A video showcasing the features of the Sprite2D Rect Editor addon.](docs/demo.webm)](docs/demo.webm)
+## Demo (click for video)
+[![A video showcasing the features of the Sprite2D Rect Editor addon.](docs/demo_thumbnail.png)](docs/demo.webm)
 
 
 ## Resizing Handles
