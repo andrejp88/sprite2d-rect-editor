@@ -6,7 +6,7 @@ haven't tested them.
 
 
 ## Demo (click for video)
-[![A video showcasing the features of the Sprite2D Rect Editor addon.](docs/demo_thumbnail.png)](docs/demo.webm)
+[![A video showcasing the features of the Sprite2D Rect Editor addon.](docs/demo_thumbnail.png)](https://gitlab.com/andrej88/sprite2d-rect-editor/-/raw/main/docs/demo.webm)
 
 
 ## Resizing Handles
