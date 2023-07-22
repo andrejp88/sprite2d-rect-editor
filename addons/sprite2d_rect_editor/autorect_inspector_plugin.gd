@@ -4,8 +4,8 @@ extends EditorInspectorPlugin
 var undo_redo: EditorUndoRedoManager
 
 
-func _init(undo_redo: EditorUndoRedoManager) -> void:
-	self.undo_redo = undo_redo
+func _init(editor_undo_redo_manager: EditorUndoRedoManager) -> void:
+	undo_redo = editor_undo_redo_manager
 
 
 func _can_handle(object: Object) -> bool:

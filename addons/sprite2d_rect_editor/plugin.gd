@@ -15,10 +15,10 @@ const grid_size := 8.0
 
 var inspector_plugin: EditorInspectorPlugin
 
-var img_handle_right := load("res://addons/sprite_2d_rect_editor/handle_right.svg") as Texture2D
-var img_handle_bottom := load("res://addons/sprite_2d_rect_editor/handle_bottom.svg") as Texture2D
-var img_handle_left := load("res://addons/sprite_2d_rect_editor/handle_left.svg") as Texture2D
-var img_handle_top := load("res://addons/sprite_2d_rect_editor/handle_top.svg") as Texture2D
+var img_handle_right := load("res://addons/sprite2d_rect_editor/handle_right.svg") as Texture2D
+var img_handle_bottom := load("res://addons/sprite2d_rect_editor/handle_bottom.svg") as Texture2D
+var img_handle_left := load("res://addons/sprite2d_rect_editor/handle_left.svg") as Texture2D
+var img_handle_top := load("res://addons/sprite2d_rect_editor/handle_top.svg") as Texture2D
 
 var current_object: Sprite2D
 var drag_state := DragState.none
@@ -31,7 +31,7 @@ var undo_redo: EditorUndoRedoManager
 func _enter_tree() -> void:
 	set_force_draw_over_forwarding_enabled()
 	undo_redo = get_undo_redo()
-	inspector_plugin = preload("res://addons/sprite_2d_rect_editor/autorect_inspector_plugin.gd").new(undo_redo)
+	inspector_plugin = preload("res://addons/sprite2d_rect_editor/autorect_inspector_plugin.gd").new(undo_redo)
 	add_inspector_plugin(inspector_plugin)
 
 
@@ -218,9 +218,9 @@ func _forward_canvas_gui_input(event: InputEvent) -> bool:
 			# Without MERGE_ENDS it acts weird when undoing
 			undo_redo.create_action("Sprite2D Rect Editor: resize rect in editor", UndoRedo.MERGE_ENDS)
 			undo_redo.add_do_property(current_object, "region_rect", final_rect)
-			undo_redo.add_undo_property(current_object, "region_rect", starting_current_object_region_rect)
+			undo_redo.add_undo_property(current_object, "region_rect", initial_rect)
 			undo_redo.add_do_property(current_object, "global_position", final_global_pos)
-			undo_redo.add_undo_property(current_object, "global_position", current_object.global_position)
+			undo_redo.add_undo_property(current_object, "global_position", initial_global_pos)
 			undo_redo.commit_action()
 
 		# Redraw viewport when cursor is moved.
@@ -293,13 +293,13 @@ func get_handle_editor_rect(direction: StringName) -> Rect2:
 		&"right":
 			var position := Vector2(
 				round(get_current_object_editor_rect().position.x + get_current_object_editor_rect().size.x + handle_offset),
-				round(get_current_object_editor_rect().position.y + (get_current_object_editor_rect().size.y / 2) - (img_handle_right.get_height() / 2)),
+				round(get_current_object_editor_rect().position.y + (get_current_object_editor_rect().size.y / 2.0) - (img_handle_right.get_height() / 2.0)),
 			)
 			return Rect2(position, img_handle_right.get_size())
 
 		&"bottom":
 			var position := Vector2(
-				round(get_current_object_editor_rect().position.x + (get_current_object_editor_rect().size.x / 2) - (img_handle_bottom.get_width() / 2)),
+				round(get_current_object_editor_rect().position.x + (get_current_object_editor_rect().size.x / 2.0) - (img_handle_bottom.get_width() / 2.0)),
 				round(get_current_object_editor_rect().position.y + get_current_object_editor_rect().size.y + handle_offset),
 			)
 			return Rect2(position, img_handle_bottom.get_size())
@@ -307,13 +307,13 @@ func get_handle_editor_rect(direction: StringName) -> Rect2:
 		&"left":
 			var position := Vector2(
 				round(get_current_object_editor_rect().position.x - img_handle_left.get_size().x - handle_offset),
-				round(get_current_object_editor_rect().position.y + (get_current_object_editor_rect().size.y / 2) - (img_handle_left.get_height() / 2)),
+				round(get_current_object_editor_rect().position.y + (get_current_object_editor_rect().size.y / 2.0) - (img_handle_left.get_height() / 2.0)),
 			)
 			return Rect2(position, img_handle_right.get_size())
 
 		&"top":
 			var position := Vector2(
-				round(get_current_object_editor_rect().position.x + (get_current_object_editor_rect().size.x / 2) - (img_handle_top.get_width() / 2)),
+				round(get_current_object_editor_rect().position.x + (get_current_object_editor_rect().size.x / 2.0) - (img_handle_top.get_width() / 2.0)),
 				round(get_current_object_editor_rect().position.y - img_handle_top.get_size().y - handle_offset),
 			)
 			return Rect2(position, img_handle_bottom.get_size())
