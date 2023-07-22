@@ -10,7 +10,7 @@ enum DragState {
 	bottom,
 }
 
-const handle_offset := 10.0
+const handle_offset := 8.0
 const grid_size := 8.0
 
 var inspector_plugin: EditorInspectorPlugin
@@ -287,7 +287,7 @@ func get_handle_editor_rect(direction: StringName) -> Rect2:
 
 		&"right":
 			var position := Vector2(
-				round(get_current_object_editor_rect().position.x + get_current_object_editor_rect().size.x + handle_offset),
+				round(get_current_object_editor_rect().position.x + get_current_object_editor_rect().size.x + handle_offset * get_editor_interface().get_editor_scale()),
 				round(get_current_object_editor_rect().position.y + (get_current_object_editor_rect().size.y / 2.0) - (img_handle_right.get_height() / 2.0)),
 			)
 			return Rect2(position, img_handle_right.get_size())
@@ -295,13 +295,13 @@ func get_handle_editor_rect(direction: StringName) -> Rect2:
 		&"bottom":
 			var position := Vector2(
 				round(get_current_object_editor_rect().position.x + (get_current_object_editor_rect().size.x / 2.0) - (img_handle_bottom.get_width() / 2.0)),
-				round(get_current_object_editor_rect().position.y + get_current_object_editor_rect().size.y + handle_offset),
+				round(get_current_object_editor_rect().position.y + get_current_object_editor_rect().size.y + handle_offset * get_editor_interface().get_editor_scale()),
 			)
 			return Rect2(position, img_handle_bottom.get_size())
 
 		&"left":
 			var position := Vector2(
-				round(get_current_object_editor_rect().position.x - img_handle_left.get_size().x - handle_offset),
+				round(get_current_object_editor_rect().position.x - img_handle_left.get_size().x - handle_offset * get_editor_interface().get_editor_scale()),
 				round(get_current_object_editor_rect().position.y + (get_current_object_editor_rect().size.y / 2.0) - (img_handle_left.get_height() / 2.0)),
 			)
 			return Rect2(position, img_handle_right.get_size())
@@ -309,7 +309,7 @@ func get_handle_editor_rect(direction: StringName) -> Rect2:
 		&"top":
 			var position := Vector2(
 				round(get_current_object_editor_rect().position.x + (get_current_object_editor_rect().size.x / 2.0) - (img_handle_top.get_width() / 2.0)),
-				round(get_current_object_editor_rect().position.y - img_handle_top.get_size().y - handle_offset),
+				round(get_current_object_editor_rect().position.y - img_handle_top.get_size().y - handle_offset * get_editor_interface().get_editor_scale()),
 			)
 			return Rect2(position, img_handle_bottom.get_size())
 

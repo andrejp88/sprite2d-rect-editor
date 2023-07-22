@@ -3,15 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c7gve25wmsunv"
-path="res://.godot/imported/handle_top.svg-0ee05c47b17d130dbddf3d793d1be421.ctex"
+path="res://.godot/imported/handle_top.svg-a008449e13d53c5fabf0edc6c633f3d2.ctex"
 metadata={
+"has_editor_variant": true,
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/sprite_2d_rect_editor/handle_top.svg"
-dest_files=["res://.godot/imported/handle_top.svg-0ee05c47b17d130dbddf3d793d1be421.ctex"]
+source_file="res://addons/sprite2d_rect_editor/handle_top.svg"
+dest_files=["res://.godot/imported/handle_top.svg-a008449e13d53c5fabf0edc6c633f3d2.ctex"]
 
 [params]
 
@@ -33,5 +34,5 @@ process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
 svg/scale=1.0
-editor/scale_with_editor_scale=false
+editor/scale_with_editor_scale=true
 editor/convert_colors_with_editor_theme=false
