@@ -6,9 +6,10 @@ haven't tested them.
 
 
 ## Demo:
+
 <figure class="video_container">
     <video controls allow_fullscreen>
-        <source src="docs/demo.webm">
+        <source src="docs/demo.webm" type="video/webm">
     </video>
 </figure>
 
