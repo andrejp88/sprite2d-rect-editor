@@ -6,12 +6,7 @@ haven't tested them.
 
 
 ## Demo:
-
-<figure class="video_container">
-    <video controls allow_fullscreen>
-        <source src="docs/demo.webm" type="video/webm">
-    </video>
-</figure>
+[![A video showcasing the features of the Sprite2D Rect Editor addon.](docs/demo.webm)](docs/demo.webm)
 
 
 ## Resizing Handles
