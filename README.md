@@ -1,3 +1,5 @@
+![logo](logo.svg)
+
 # Sprite2D Rect Editor
 
 This addon allows easier editing of the `region_rect` property of Sprite2D
