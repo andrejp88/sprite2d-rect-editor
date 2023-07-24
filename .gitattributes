@@ -1,2 +1,4 @@
 /**                                 export-ignore
+/addons                             !export-ignore
+/addons/sprite2d_rect_editor        !export-ignore
 /addons/sprite2d_rect_editor/**     !export-ignore
